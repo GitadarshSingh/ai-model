@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-accent="teal">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Adarsh's AI</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
+    <style>
+        :root{--bg:#f6f7f9;--side:#eceef2;--panel:#fff;--text:#151a21;--muted:#667085;--line:#dcdfe5;--user:#e4eefb;--code:#eff1f4;--hover:#dde1e8;--accent:#0d9488;--on:#fff}
+        [data-theme=dark]{--bg:#0e1217;--side:#090c10;--panel:#151b23;--text:#e7eaee;--muted:#8b95a3;--line:#242c37;--user:#1b2a3d;--code:#090c10;--hover:#1a222c;--on:#081410}
+        [data-theme=dark][data-accent=teal]{--accent:#2dd4bf}
+        [data-accent=violet]{--accent:#8b5cf6}[data-accent=blue]{--accent:#3b82f6}[data-accent=rose]{--accent:#f43f5e}
+        [data-theme=dark][data-accent=violet],[data-theme=dark][data-accent=blue],[data-theme=dark][data-accent=rose]{--on:#fff}
+        *{box-sizing:border-box}html,body{height:100%;margin:0}
+        body{font-family:"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.6}
+        button,input,select,textarea{font:inherit;color:inherit}button{cursor:pointer}
+        :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+        textarea:focus-visible,#find:focus-visible{outline:none}
+        .nav{padding:8px 10px;display:grid;gap:2px}
+        .nav button{display:flex;align-items:center;gap:12px;width:100%;padding:9px 10px;border:0;border-radius:10px;background:none;text-align:left;font-size:15px}
+        .nav button:hover,.nav button.on{background:var(--hover)}
+        .nav svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+        .nav #find{margin:4px 0 6px}
+        .item .s{background:none;border:0;color:var(--muted);padding:6px 4px;opacity:0}.item .s.on{opacity:1;color:var(--accent)}.item:hover .s,.item .s:focus-visible{opacity:1}
+        .art{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:14px}
+        .art h4{margin:0 0 2px;font-weight:600}.art small{color:var(--muted)}
+        .art pre{margin:8px 0 0;position:relative;background:var(--code);border:1px solid var(--line);border-radius:10px;padding:14px;overflow-x:auto}
+        .app{display:grid;grid-template-columns:276px 1fr;height:100%;transition:grid-template-columns .2s}
+        .app.min{grid-template-columns:0 1fr}.app.min .side{visibility:hidden}
+        .side{background:var(--side);border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:0;overflow:hidden}
+        .brand{display:flex;align-items:center;gap:10px;padding:14px 14px 6px;font-weight:700}
+        .logo{width:28px;height:28px;border-radius:8px;background:var(--accent);color:var(--on);display:grid;place-items:center;flex:none}
+        .brand .sp{flex:1}
+        .ib{background:none;border:1px solid transparent;border-radius:8px;padding:4px 9px;color:var(--muted)}
+        .ib:hover{background:var(--hover);color:var(--text)}
+        .sd{padding:8px 12px;display:grid;gap:8px}
+        .new{padding:9px 12px;border-radius:10px;border:1px solid var(--line);background:var(--panel);text-align:left;font-weight:600}
+        .new:hover{border-color:var(--accent)}
+        #find{width:100%;padding:8px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);outline:0}
+        #find:focus{border-color:var(--accent)}
+        .list{flex:1;overflow-y:auto;padding:0 8px}
+        .label{padding:12px 8px 4px;font-size:12px;color:var(--muted)}
+        .item{display:flex;border-radius:8px}.item:hover,.item.on{background:var(--hover)}
+        .item .t{flex:1;min-width:0;text-align:left;background:none;border:0;padding:8px 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .item .x{background:none;border:0;color:var(--muted);padding:6px 10px;opacity:0}
+        .item:hover .x,.item .x:focus-visible{opacity:1}.item .x:hover{color:#e5484d}
+        .me{display:flex;align-items:center;gap:10px;margin:8px;padding:8px;border-radius:10px;background:none;border:0;text-align:left;width:calc(100% - 16px)}
+        .me:hover{background:var(--hover)}
+        .av{flex:none;width:30px;height:30px;border-radius:50%;background:var(--accent);color:var(--on);display:grid;place-items:center;font-weight:700;font-size:12px}
+        .me b{display:block;line-height:1.2}.me small{color:var(--muted)}
+        .main{display:flex;flex-direction:column;min-width:0;min-height:0}
+        .top{display:flex;align-items:center;gap:8px;padding:10px 14px}
+        .top .sp{flex:1}
+        #style{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:5px 10px}
+        #msgs{flex:1;overflow-y:auto;padding:12px 16px 8px}
+        .wrap{max-width:780px;margin:0 auto}
+        .row{display:flex;gap:12px;margin-bottom:20px}.row.user{justify-content:flex-end}
+        .bubble{background:var(--user);padding:10px 16px;border-radius:18px 18px 4px 18px;max-width:82%;white-space:pre-wrap;word-wrap:break-word}
+        .ai{min-width:0;flex:1}.ai>*:first-child{margin-top:0}
+        .ai p{margin:.6em 0}.ai ul,.ai ol{padding-left:1.4em}.ai a{color:var(--accent)}
+        .ai code{background:var(--code);padding:2px 6px;border-radius:5px;font-family:Consolas,monospace;font-size:.9em}
+        .ai pre{position:relative;background:var(--code);border:1px solid var(--line);border-radius:10px;padding:14px;overflow-x:auto}
+        .ai pre code{background:none;padding:0}
+        .ai table{border-collapse:collapse;display:block;overflow-x:auto}.ai th,.ai td{border:1px solid var(--line);padding:6px 10px}
+        .copy{position:absolute;top:6px;right:6px;background:var(--panel);border:1px solid var(--line);border-radius:6px;font-size:12px;padding:2px 8px}
+        .acts{display:flex;gap:2px;margin-top:4px;opacity:0;transition:opacity .15s}.row:hover .acts,.acts:focus-within{opacity:1}
+        .acts button{background:none;border:0;border-radius:6px;padding:2px 8px;color:var(--muted);font-size:13px}
+        .acts button:hover,.acts button.on{background:var(--hover);color:var(--accent)}
+        .err{color:#e5484d}
+        .dots span{display:inline-block;width:7px;height:7px;margin-right:4px;border-radius:50%;background:var(--muted);animation:b 1.2s infinite}
+        .dots span:nth-child(2){animation-delay:.15s}.dots span:nth-child(3){animation-delay:.3s}
+        @keyframes b{0%,60%,100%{opacity:.3}30%{opacity:1}}
+        @media (prefers-reduced-motion:reduce){.dots span{animation:none}}
+        .hero{margin-top:9vh;text-align:center}
+        .hero h1{font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:clamp(28px,5vw,40px);margin:0 0 8px}
+        .hero p{color:var(--muted);margin:0 0 26px}
+        .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;text-align:left}
+        .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 14px;text-align:left}
+        .card:hover{border-color:var(--accent)}.card small{display:block;color:var(--accent);font-weight:600;margin-bottom:2px}
+        .compose{padding:6px 16px 14px}
+        .box{max-width:780px;margin:0 auto;display:flex;align-items:flex-end;gap:6px;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:8px 8px 8px 16px}
+        .box:focus-within{border-color:var(--accent)}
+        textarea{flex:1;resize:none;border:0;outline:0;background:none;max-height:180px;padding:6px 0}
+        .box button{width:38px;height:38px;border-radius:12px;border:0;font-size:17px;flex:none}
+        #mic{background:none;color:var(--muted)}#mic:hover{background:var(--hover)}#mic.on{background:#e5484d;color:#fff}
+        #send{background:var(--accent);color:var(--on);font-weight:700}#send:disabled{opacity:.4;cursor:not-allowed}
+        .hint{text-align:center;color:var(--muted);font-size:12px;margin-top:8px}
+        dialog{border:1px solid var(--line);border-radius:16px;background:var(--panel);color:var(--text);width:min(400px,92vw);padding:20px}
+        dialog::backdrop{background:rgba(0,0,0,.5)}
+        dialog h3{margin:0 0 12px}dialog label{display:block;margin:10px 0 4px;color:var(--muted);font-size:13px}
+        dialog input[type=text],dialog select{width:100%;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:var(--bg)}
+        .sw{display:flex;gap:10px}.sw button{width:28px;height:28px;border-radius:50%;border:2px solid transparent}.sw button.on{border-color:var(--text)}
+        .chk{display:flex!important;gap:8px;align-items:center;color:var(--text)!important;font-size:14px!important}
+        .da{display:flex;justify-content:space-between;margin-top:18px}
+        .da button{padding:7px 16px;border-radius:8px;border:1px solid var(--line);background:none}.da .go{background:var(--accent);color:var(--on);border-color:var(--accent)}
+        .bd{display:none}
+        @media (max-width:800px){
+            .app,.app.min{grid-template-columns:1fr}
+            .side,.app.min .side{position:fixed;inset:0 auto 0 0;width:276px;z-index:5;transform:translateX(-100%);transition:transform .2s;visibility:visible}
+            .side.open{transform:none}.bd.open{display:block;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:4}
+            .item .x,.item .s,.acts{opacity:1}}
+    </style>
+</head>
+<body>
+<div class="app" id="app">
+    <aside class="side" id="side">
+        <div class="brand"><div class="logo">&#10022;</div><span>Adarsh's AI</span><span class="sp"></span><button class="ib" id="fold" aria-label="Hide sidebar">&#171;</button></div>
+        <nav class="nav">
+            <button id="newBtn"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>New</button>
+            <button id="searchBtn"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>Search</button>
+            <input id="find" hidden placeholder="Search chats (Ctrl+K)" />
+            <button id="starBtn"><svg viewBox="0 0 24 24"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg>Starred</button>
+            <button id="artBtn"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="12" height="12" rx="2"/><path d="M8 20h10a2 2 0 0 0 2-2V8"/></svg>Artifacts</button>
+            <button id="codeBtn"><svg viewBox="0 0 24 24"><path d="m8 8-4 4 4 4M16 8l4 4-4 4M14 5l-4 14"/></svg>Code</button>
+            <button id="custBtn"><svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg>Customize</button>
+        </nav>
+        <div class="list" id="list"></div>
+        <button class="me" id="meBtn"><div class="av" id="mav"></div><div><b id="mname"></b><small>Settings</small></div></button>
+    </aside>
+    <div class="bd" id="bd"></div>
+    <main class="main">
+        <div class="top">
+            <button class="ib" id="menu" aria-label="Show sidebar">&#9776;</button>
+            <span class="sp"></span>
+            <select id="style" aria-label="Answer style">
+                <option value="balanced">Balanced</option><option value="concise">Concise</option>
+                <option value="detailed">Detailed</option><option value="code">Code mentor</option>
+            </select>
+            <button class="ib" id="export">Export</button>
+        </div>
+        <div id="msgs"><div class="wrap" id="wrap"></div></div>
+        <div class="compose">
+            <div class="box">
+                <textarea id="q" rows="1" placeholder="Message Adarsh's AI"></textarea>
+                <button id="mic" aria-label="Voice input">&#127908;</button>
+                <button id="send" aria-label="Send">&#8593;</button>
+            </div>
+            <div class="hint">Enter to send, Shift+Enter for a new line. AI can make mistakes.</div>
+        </div>
+    </main>
+</div>
+
+<dialog id="dlg">
+    <h3>Settings</h3>
+    <label for="nm">Your name</label><input type="text" id="nm" />
+    <label for="th">Theme</label><select id="th"><option value="dark">Dark</option><option value="light">Light</option></select>
+    <label>Accent color</label>
+    <div class="sw" id="sw">
+        <button data-a="teal" style="background:#14b8a6" aria-label="Teal"></button><button data-a="violet" style="background:#8b5cf6" aria-label="Violet"></button>
+        <button data-a="blue" style="background:#3b82f6" aria-label="Blue"></button><button data-a="rose" style="background:#f43f5e" aria-label="Rose"></button>
+    </div>
+    <label class="chk"><input type="checkbox" id="mem" /> Remember earlier messages in a chat</label>
+    <div class="da"><button id="wipe">Delete all chats</button><button class="go" id="done">Done</button></div>
+</dialog>
+
+<script>
+    const API_URL = "/api/chat";
+    const $ = s => document.querySelector(s);
+    const STYLES = { balanced: "", concise: "Answer concisely. ", detailed: "Give a detailed, step-by-step answer. ", code: "Act as a senior Java and Spring Boot mentor and include code examples. " };
+    const IDEAS = [
+        ["Code", "Write a Spring Boot REST controller with CRUD"], ["Learn", "Explain Java streams with simple examples"],
+        ["Interview", "Ask me 5 Java interview questions one by one"], ["Write", "Draft a short LinkedIn post about my AI chat project"]
+    ];
+    let S = load(), busy = false, stopFlag = false, starOnly = false;
+
+    function load() {
+        const d = { chats: [], active: null, theme: matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark", accent: "teal", name: "Adarsh Singh", memory: true, style: "balanced" };
+        try { return Object.assign(d, JSON.parse(localStorage.getItem("aichat2") || "{}")); } catch (e) { return d; }
+    }
+    function save() { try { localStorage.setItem("aichat2", JSON.stringify(S)); } catch (e) {} }
+    const cur = () => S.chats.find(c => c.id === S.active);
+    const first = () => (S.name.trim().split(/\s+/)[0] || "there");
+    const initials = () => S.name.trim().split(/\s+/).map(w => w[0]).slice(0, 2).join("").toUpperCase() || "U";
+
+    function applyLook() {
+        const r = document.documentElement; r.dataset.theme = S.theme; r.dataset.accent = S.accent;
+        $("#mname").textContent = S.name; $("#mav").textContent = initials(); $("#style").value = S.style;
+    }
+    function newChat() { const c = { id: Date.now().toString(36), title: "New chat", messages: [], ts: Date.now() }; S.chats.unshift(c); S.active = c.id; save(); return c; }
+    function openChat(id) { S.active = id; save(); closeSide(); renderList(); renderMsgs(); }
+    function delChat(id) { S.chats = S.chats.filter(c => c.id !== id); if (S.active === id) S.active = null; save(); renderList(); renderMsgs(); }
+    function closeSide() { $("#side").classList.remove("open"); $("#bd").classList.remove("open"); }
+
+    function bucket(ts) { const d = (Date.now() - ts) / 864e5; return d < 1 ? "Today" : d < 2 ? "Yesterday" : d < 8 ? "Previous 7 days" : "Older"; }
+    function renderList() {
+        const el = $("#list"), term = $("#find").value.trim().toLowerCase(); el.innerHTML = ""; let last = "";
+        S.chats.filter(c => (!starOnly || c.star) && (!term || c.title.toLowerCase().includes(term) || c.messages.some(m => (m.content || "").toLowerCase().includes(term))))
+            .sort((a, b) => b.ts - a.ts).forEach(c => {
+            const b = bucket(c.ts);
+            if (b !== last) { const l = document.createElement("div"); l.className = "label"; l.textContent = b; el.appendChild(l); last = b; }
+            const it = document.createElement("div"); it.className = "item" + (c.id === S.active ? " on" : "");
+            const t = document.createElement("button"); t.className = "t"; t.textContent = c.title; t.onclick = () => openChat(c.id);
+            const x = document.createElement("button"); x.className = "x"; x.textContent = "\u2715"; x.setAttribute("aria-label", "Delete chat"); x.onclick = () => delChat(c.id);
+            const s = document.createElement("button"); s.className = "s" + (c.star ? " on" : ""); s.textContent = c.star ? "\u2605" : "\u2606"; s.setAttribute("aria-label", "Star chat"); s.onclick = () => { c.star = !c.star; save(); renderList(); };
+            it.append(t, s, x); el.appendChild(it);
+        });
+    }
+
+    const md = t => DOMPurify.sanitize(marked.parse(t, { breaks: true }));
+    function addCopy(root) { root.querySelectorAll("pre").forEach(p => { if (p.querySelector(".copy")) return; const b = document.createElement("button"); b.className = "copy"; b.textContent = "Copy"; p.appendChild(b); }); }
+    const scrollDown = () => { const m = $("#msgs"); m.scrollTop = m.scrollHeight; };
+
+    function greeting() { const h = new Date().getHours(); return (h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening") + ", " + first(); }
+
+    function renderMsgs(pending) {
+        const w = $("#wrap"), c = cur(); w.innerHTML = "";
+        if (!c || !c.messages.length) {
+            w.innerHTML = '<div class="hero"><h1></h1><p>What would you like to work on today?</p><div class="cards"></div></div>';
+            w.querySelector("h1").textContent = greeting();
+            IDEAS.forEach(([k, t]) => { const b = document.createElement("button"); b.className = "card"; b.innerHTML = "<small></small><span></span>"; b.children[0].textContent = k; b.children[1].textContent = t; b.onclick = () => send(t); w.querySelector(".cards").appendChild(b); });
+            return;
+        }
+        c.messages.forEach((m, i) => {
+            const r = document.createElement("div");
+            if (m.role === "user") {
+                r.className = "row user"; r.innerHTML = '<div class="bubble"></div><div class="av"></div>';
+                r.children[0].textContent = m.content; r.children[1].textContent = initials();
+            } else {
+                r.className = "row"; r.innerHTML = '<div class="logo">&#10022;</div><div class="ai"></div>';
+                const a = r.querySelector(".ai");
+                if (m.error) { a.innerHTML = '<span class="err"></span>'; a.firstChild.textContent = m.content; }
+                else { a.innerHTML = md(m.content); addCopy(a); }
+                const acts = document.createElement("div"); acts.className = "acts"; acts.dataset.i = i;
+                acts.innerHTML = '<button data-a="copy">Copy</button>' + (i === c.messages.length - 1 ? '<button data-a="regen">Regenerate</button>' : "") +
+                    '<button data-a="up" class="' + (m.fb === "up" ? "on" : "") + '">Good</button><button data-a="down" class="' + (m.fb === "down" ? "on" : "") + '">Bad</button>';
+                a.appendChild(acts);
+            }
+            w.appendChild(r);
+        });
+        if (pending) { const r = document.createElement("div"); r.className = "row"; r.innerHTML = '<div class="logo">&#10022;</div><div class="ai dots"><span></span><span></span><span></span></div>'; w.appendChild(r); }
+        scrollDown();
+    }
+
+    function buildQ(c, text) {
+        let ctx = "";
+        if (S.memory) {
+            ctx = c.messages.slice(0, -1).filter(m => !m.error).slice(-6).map(m => (m.role === "user" ? "User: " : "Assistant: ") + m.content.slice(0, 600)).join("\n");
+            if (ctx) ctx = "Earlier in this chat:\n" + ctx + "\n\nAnswer the latest message below.\n";
+        }
+        return "The user's name is " + first() + ". " + STYLES[S.style] + "\n" + ctx + "User: " + text;
+    }
+
+    function setBusy(b) { busy = b; const s = $("#send"); s.innerHTML = b ? "&#9632;" : "&#8593;"; s.setAttribute("aria-label", b ? "Stop" : "Send"); }
+
+    function reveal(c, full) {
+        return new Promise(done => {
+            const m = { role: "assistant", content: "" }; c.messages.push(m); renderMsgs();
+            const ais = document.querySelectorAll("#wrap .ai"), el = ais[ais.length - 1]; let i = 0; stopFlag = false;
+            const t = setInterval(() => {
+                if (stopFlag || i >= full.length) { clearInterval(t); m.content = stopFlag ? full.slice(0, i) || "(stopped)" : full; done(); return; }
+                i = Math.min(full.length, i + Math.max(3, Math.ceil(full.length / 140)));
+                el.innerHTML = md(full.slice(0, i)); scrollDown();
+            }, 16);
+        });
+    }
+
+    async function send(text, regen) {
+        if (busy) { stopFlag = true; return; }
+        text = (text || "").trim(); if (!text) return;
+        const c = cur() || newChat();
+        if (!regen) { c.messages.push({ role: "user", content: text }); if (c.messages.length === 1) c.title = text.length > 40 ? text.slice(0, 40) + "..." : text; }
+        c.ts = Date.now(); setBusy(true); save(); renderList(); renderMsgs(true);
+        try {
+            const r = await fetch(API_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ question: buildQ(c, text) }) });
+            if (!r.ok) throw new Error("Server error " + r.status + ". Check the Spring Boot console.");
+            const d = await r.json(); await reveal(c, d.answer || "(empty reply)");
+        } catch (e) {
+            c.messages.push({ role: "assistant", error: true, content: e.message === "Failed to fetch" ? "Cannot reach the server. Is Spring Boot running on port 8080?" : e.message });
+        }
+        setBusy(false); save(); renderMsgs(); $("#q").focus();
+    }
+
+    $("#wrap").addEventListener("click", e => {
+        const c = cur(), b = e.target;
+        if (b.classList.contains("copy")) { navigator.clipboard.writeText(b.parentElement.querySelector("code").innerText); b.textContent = "Copied"; setTimeout(() => b.textContent = "Copy", 1500); return; }
+        const a = b.dataset.a, acts = b.closest(".acts"); if (!a || !acts) return;
+        const m = c.messages[+acts.dataset.i];
+        if (a === "copy") { navigator.clipboard.writeText(m.content); b.textContent = "Copied"; setTimeout(() => b.textContent = "Copy", 1500); }
+        if (a === "up" || a === "down") { m.fb = m.fb === a ? "" : a; save(); renderMsgs(); }
+        if (a === "regen") { c.messages.pop(); const u = c.messages[c.messages.length - 1]; send(u.content, true); }
+    });
+
+    const q = $("#q"), grow = () => { q.style.height = "auto"; q.style.height = Math.min(q.scrollHeight, 180) + "px"; };
+    const doSend = () => { if (busy) { stopFlag = true; return; } const t = q.value; q.value = ""; grow(); send(t); };
+    q.addEventListener("input", grow);
+    q.addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); doSend(); } });
+    $("#send").onclick = doSend;
+    const fresh = () => { S.active = null; save(); renderList(); renderMsgs(); closeSide(); q.focus(); };
+    $("#newBtn").onclick = fresh;
+    $("#find").oninput = renderList;
+    $("#searchBtn").onclick = () => { const f = $("#find"); f.hidden = !f.hidden; if (f.hidden) { f.value = ""; renderList(); } else f.focus(); };
+    $("#starBtn").onclick = e => { starOnly = !starOnly; e.currentTarget.classList.toggle("on", starOnly); renderList(); };
+    $("#codeBtn").onclick = () => { S.style = "code"; save(); applyLook(); fresh(); };
+    $("#custBtn").onclick = () => $("#meBtn").click();
+    $("#artBtn").onclick = () => {
+        closeSide(); const w = $("#wrap"); w.innerHTML = "<h2 style='font-weight:600'>Artifacts</h2>"; let n = 0;
+        S.chats.forEach(c => c.messages.forEach(m => {
+            if (m.role !== "assistant" || m.error) return;
+            for (const x of m.content.matchAll(/```(\w*)\n([\s\S]*?)```/g)) {
+                n++; const d = document.createElement("div"); d.className = "art";
+                d.innerHTML = "<h4></h4><small></small><pre><code></code></pre>";
+                d.querySelector("h4").textContent = c.title; d.querySelector("small").textContent = x[1] || "code";
+                d.querySelector("code").textContent = x[2]; addCopy(d); w.appendChild(d);
+            }
+        }));
+        if (!n) w.innerHTML += "<p style='color:var(--muted)'>Code blocks from your chats will collect here.</p>";
+    };
+    $("#fold").onclick = () => $("#app").classList.add("min");
+    $("#menu").onclick = () => { if (innerWidth <= 800) { $("#side").classList.add("open"); $("#bd").classList.add("open"); } else $("#app").classList.toggle("min"); };
+    $("#bd").onclick = closeSide;
+    $("#style").onchange = e => { S.style = e.target.value; save(); };
+    $("#export").onclick = () => {
+        const c = cur(); if (!c) return;
+        const txt = "# " + c.title + "\n\n" + c.messages.map(m => "**" + (m.role === "user" ? S.name : "AI") + ":**\n\n" + m.content).join("\n\n---\n\n");
+        const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([txt], { type: "text/markdown" })); a.download = c.title.replace(/[^\w]+/g, "-") + ".md"; a.click();
+    };
+    document.addEventListener("keydown", e => {
+        if (e.ctrlKey && e.key.toLowerCase() === "k") { e.preventDefault(); $("#app").classList.remove("min"); $("#find").hidden = false; $("#find").focus(); }
+        if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "o") { e.preventDefault(); fresh(); }
+    });
+
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition; let rec = null;
+    if (!SR) $("#mic").hidden = true;
+    else $("#mic").onclick = () => {
+        if (rec) { rec.stop(); return; }
+        rec = new SR(); rec.lang = "en-IN"; rec.interimResults = true;
+        rec.onresult = e => { q.value = [...e.results].map(r => r[0].transcript).join(""); grow(); };
+        rec.onend = () => { rec = null; $("#mic").classList.remove("on"); };
+        rec.start(); $("#mic").classList.add("on");
+    };
+
+    const dlg = $("#dlg");
+    function swMark() { document.querySelectorAll("#sw button").forEach(b => b.classList.toggle("on", b.dataset.a === S.accent)); }
+    $("#meBtn").onclick = () => { $("#nm").value = S.name; $("#th").value = S.theme; $("#mem").checked = S.memory; swMark(); dlg.showModal(); };
+    $("#nm").oninput = e => { S.name = e.target.value || "Adarsh Singh"; save(); applyLook(); if (!cur() || !cur().messages.length) renderMsgs(); };
+    $("#th").onchange = e => { S.theme = e.target.value; save(); applyLook(); };
+    $("#mem").onchange = e => { S.memory = e.target.checked; save(); };
+    $("#sw").onclick = e => { if (e.target.dataset.a) { S.accent = e.target.dataset.a; save(); applyLook(); swMark(); } };
+    $("#done").onclick = () => dlg.close();
+    $("#wipe").onclick = () => { if (confirm("Delete all chats?")) { S.chats = []; S.active = null; save(); renderList(); renderMsgs(); dlg.close(); } };
+
+    applyLook(); renderList(); renderMsgs();
+</script>
+</body>
+</html>
