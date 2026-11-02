@@ -15,8 +15,10 @@
 
 <!-- Add a screenshot at docs/screenshot.png and it will show up here -->
 <p align="center">
-  <img src="docs/screenshot.png" alt="Adarsh's AI chat screenshot" width="860" />
+  <img src="Screenshot%202026-11-02%20131253.png" alt="Adarsh's AI chat screenshot" width="860" />
+    <img src="Screenshot%202026-11-02%20132109.png" alt="Adarsh's AI chat screenshot" width="860" />
 </p>
+
 
 ---
 
