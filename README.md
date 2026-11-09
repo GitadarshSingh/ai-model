@@ -13,6 +13,8 @@
 
 </div>
 
+🔗 Live: http://13.235.136.241/ (hosted on AWS EC2 with an Elastic IP)
+
 <!-- Add a screenshot at docs/screenshot.png and it will show up here -->
 <p align="center">
   <img src="Screenshot 2026-11-02 133606.png" alt="Adarsh's AI chat screenshot" width="860" />
@@ -21,6 +23,7 @@
 
 
 ---
+
 
 ## ✨ Features
 
